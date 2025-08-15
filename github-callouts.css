@@ -1,0 +1,30 @@
+/* GitHub-style callout/admonition blocks */
+.markdown-body .gh-callout {
+  border-left: 0.25em solid #6cb6ff;
+  background: #1b2733;
+  padding: 0.6em 1em;
+  margin: 1em 0;
+  border-radius: 6px;
+  position: relative;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.03);
+  color: #c9d1d9;
+  font-size: 1em;
+}
+.markdown-body .gh-callout-title {
+  font-weight: 600;
+  margin-bottom: 0.4em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.markdown-body .gh-callout-note    { border-left-color: #6cb6ff; background: #1b2733; }
+.markdown-body .gh-callout-warning { border-left-color: #e3b341; background: #2c221b; }
+.markdown-body .gh-callout-important { border-left-color: #bc8cff; background: #251b2c; }
+.markdown-body .gh-callout-tip     { border-left-color: #6cc644; background: #1b2c1b; }
+.markdown-body .gh-callout-caution { border-left-color: #d73a49; background: #2c1b1b; }
+
+.markdown-body .gh-callout-icon {
+  font-size: 1.2em;
+  line-height: 1;
+  vertical-align: middle;
+}
