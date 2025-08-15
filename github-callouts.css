@@ -1,30 +1,85 @@
-/* GitHub-style callout/admonition blocks */
-.markdown-body .gh-callout {
-  border-left: 0.25em solid #6cb6ff;
-  background: #1b2733;
-  padding: 0.6em 1em;
-  margin: 1em 0;
-  border-radius: 6px;
+/* GitHub Callout CSS - Enhanced for dark backgrounds and margin fix */
+
+/* Base callout box */
+.gh-callout {
   position: relative;
-  box-shadow: 0 1px 1px rgba(0,0,0,0.03);
-  color: #c9d1d9;
+  display: block;
+  margin: 1em 0;
+  padding: 0.75em 1em 0.75em 1.5em;
+  border-radius: 6px;
+  border-left: 0.5em solid #d0d7de;
+  background: #272b33;
+  box-shadow: none;
+  color: #e6edf3;
   font-size: 1em;
 }
-.markdown-body .gh-callout-title {
-  font-weight: 600;
-  margin-bottom: 0.4em;
+
+/* Title bar for callouts */
+.gh-callout-title {
   display: flex;
   align-items: center;
-  gap: 0.5em;
+  font-weight: 600;
+  margin-bottom: 0.4em;
+  font-size: 1.05em;
 }
-.markdown-body .gh-callout-note    { border-left-color: #6cb6ff; background: #1b2733; }
-.markdown-body .gh-callout-warning { border-left-color: #e3b341; background: #2c221b; }
-.markdown-body .gh-callout-important { border-left-color: #bc8cff; background: #251b2c; }
-.markdown-body .gh-callout-tip     { border-left-color: #6cc644; background: #1b2c1b; }
-.markdown-body .gh-callout-caution { border-left-color: #d73a49; background: #2c1b1b; }
 
-.markdown-body .gh-callout-icon {
+/* Icon in the callout title */
+.gh-callout-icon {
+  margin-right: 0.5em;
   font-size: 1.2em;
-  line-height: 1;
-  vertical-align: middle;
+}
+
+/* Callout variants */
+.gh-callout-warning {
+  border-left-color: #e3b341;
+  background: #2d2611;
+}
+.gh-callout-important {
+  border-left-color: #d1242f;
+  background: #2d191a;
+}
+.gh-callout-tip {
+  border-left-color: #3fb950;
+  background: #16271b;
+}
+.gh-callout-caution {
+  border-left-color: #b35900;
+  background: #271c12;
+}
+.gh-callout-note {
+  border-left-color: #2188ff;
+  background: #182136;
+}
+
+/* Remove bottom margin from last element in a callout for a tight box */
+.gh-callout > *:last-child,
+.gh-callout p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Ensure paragraphs and lists inside callouts have normal spacing */
+.gh-callout p,
+.gh-callout ul,
+.gh-callout ol {
+  margin-top: 0.2em;
+  margin-bottom: 0.6em;
+}
+
+.gh-callout ul,
+.gh-callout ol {
+  padding-left: 1.4em;
+}
+
+.gh-callout code {
+  background: #1a1f23;
+  color: #d2b863;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+/* Responsive: don't overflow on small screens */
+.gh-callout {
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
