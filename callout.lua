@@ -1,38 +1,85 @@
--- Pandoc Lua filter to convert > [!TYPE] callouts into HTML divs for styling
-local icons = {
-  WARNING = "&#9888;&#65039;",  -- ⚠️
-  IMPORTANT = "&#10071;",       -- ❗
-  TIP = "&#128161;",            -- 💡
-  CAUTION = "&#9940;",          -- ⛔
-  NOTE = "&#8505;&#65039;"      -- ℹ️
-}
-local colors = {
-  WARNING = "warning",
-  IMPORTANT = "important",
-  TIP = "tip",
-  CAUTION = "caution",
-  NOTE = "note"
+/* GitHub Callout CSS */
+
+/* Base callout box */
+.gh-callout {
+  position: relative;
+  display: block;
+  margin: 1em 0;
+  padding: 0.75em 1em 0.75em 1.5em;
+  border-radius: 6px;
+  border-left: 0.5em solid #d0d7de;
+  background: #272b33;
+  box-shadow: none;
+  color: #e6edf3;
+  font-size: 1em;
 }
 
-function BlockQuote(el)
-  if #el.content > 0 and el.content[1].t == "Para" then
-    local text = pandoc.utils.stringify(el.content[1])
-    local m = text:match("^%[!(%u+)%]%s*")
-    if m and colors[m] then
-      local rest = text:gsub("^%[!%u+%]%s*", "")
-      local children = el.content
-      children[1] = pandoc.Para({pandoc.RawInline("html",
-        '<div class="gh-callout gh-callout-' .. colors[m] .. '">'
-        .. '<div class="gh-callout-title"><span class="gh-callout-icon">' .. (icons[m] or "") .. '</span>'
-        .. m:sub(1,1)..m:sub(2):lower() .. '</div>'
-        .. pandoc.utils.stringify(pandoc.Span(children[1].content):walk {
-             Str = function(s)
-               return s.text == ("[!"..m.."]") and pandoc.Str("") or s
-             end
-           })
-      )})
-      children[#children+1] = pandoc.RawBlock("html", "</div>")
-      return pandoc.Div(children)
-    end
-  end
-end
+/* Title bar for callouts */
+.gh-callout-title {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 0.4em;
+  font-size: 1.05em;
+}
+
+/* Icon in the callout title */
+.gh-callout-icon {
+  margin-right: 0.5em;
+  font-size: 1.2em;
+}
+
+/* Callout variants */
+.gh-callout-warning {
+  border-left-color: #e3b341;
+  background: #2d2611;
+}
+.gh-callout-important {
+  border-left-color: #d1242f;
+  background: #2d191a;
+}
+.gh-callout-tip {
+  border-left-color: #3fb950;
+  background: #16271b;
+}
+.gh-callout-caution {
+  border-left-color: #b35900;
+  background: #271c12;
+}
+.gh-callout-note {
+  border-left-color: #2188ff;
+  background: #182136;
+}
+
+/* Remove bottom margin from last element in a callout for a tight box */
+.gh-callout > *:last-child,
+.gh-callout p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Ensure paragraphs and lists inside callouts have normal spacing */
+.gh-callout p,
+.gh-callout ul,
+.gh-callout ol {
+  margin-top: 0.2em;
+  margin-bottom: 0.6em;
+}
+
+.gh-callout ul,
+.gh-callout ol {
+  padding-left: 1.4em;
+}
+
+.gh-callout code {
+  background: #1a1f23;
+  color: #d2b863;
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+/* Responsive: don't overflow on small screens */
+.gh-callout {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
