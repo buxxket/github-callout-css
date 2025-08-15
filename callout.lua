@@ -1,85 +1,40 @@
-/* GitHub Callout CSS */
-
-/* Base callout box */
-.gh-callout {
-  position: relative;
-  display: block;
-  margin: 1em 0;
-  padding: 0.75em 1em 0.75em 1.5em;
-  border-radius: 6px;
-  border-left: 0.5em solid #d0d7de;
-  background: #272b33;
-  box-shadow: none;
-  color: #e6edf3;
-  font-size: 1em;
+local callout_types = {
+  WARNING   = {icon = "&#9888;&#65039;", klass = "warning",    label = "Warning"},
+  IMPORTANT = {icon = "&#10071;",        klass = "important",  label = "Important"},
+  TIP       = {icon = "&#128161;",       klass = "tip",        label = "Tip"},
+  CAUTION   = {icon = "&#9940;",         klass = "caution",    label = "Caution"},
+  NOTE      = {icon = "&#8505;&#65039;", klass = "note",       label = "Note"},
 }
 
-/* Title bar for callouts */
-.gh-callout-title {
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-  margin-bottom: 0.4em;
-  font-size: 1.05em;
-}
+function BlockQuote(el)
+  if #el.content > 0 and el.content[1].t == "Para" then
+    local first = pandoc.utils.stringify(el.content[1])
+    local m = first:match("^%[!(%u+)%]%s*$")
+    if m and callout_types[m] then
+      -- Multi-line callout: first line is [!TYPE], rest is content
+      local content = {}
+      for i = 2, #el.content do
+        table.insert(content, el.content[i])
+      end
+      local inner = pandoc.write(pandoc.Pandoc(content), "html")
+      local t = callout_types[m]
+      local html = string.format(
+        '<div class="gh-callout gh-callout-%s"><div class="gh-callout-title"><span class="gh-callout-icon">%s</span>%s</div>%s</div>',
+        t.klass, t.icon, t.label, inner
+      )
+      return pandoc.RawBlock("html", html)
+    else
+      -- Single-line callout: [!TYPE] content...
+      local sm, scontent = first:match("^%[!(%u+)%]%s*(.+)")
+      if sm and callout_types[sm] then
+        local t = callout_types[sm]
+        local html = string.format(
+          '<div class="gh-callout gh-callout-%s"><div class="gh-callout-title"><span class="gh-callout-icon">%s</span>%s</div><p>%s</p></div>',
+          t.klass, t.icon, t.label, scontent
+        )
+        return pandoc.RawBlock("html", html)
+      end
+    end
+  end
+end
 
-/* Icon in the callout title */
-.gh-callout-icon {
-  margin-right: 0.5em;
-  font-size: 1.2em;
-}
-
-/* Callout variants */
-.gh-callout-warning {
-  border-left-color: #e3b341;
-  background: #2d2611;
-}
-.gh-callout-important {
-  border-left-color: #d1242f;
-  background: #2d191a;
-}
-.gh-callout-tip {
-  border-left-color: #3fb950;
-  background: #16271b;
-}
-.gh-callout-caution {
-  border-left-color: #b35900;
-  background: #271c12;
-}
-.gh-callout-note {
-  border-left-color: #2188ff;
-  background: #182136;
-}
-
-/* Remove bottom margin from last element in a callout for a tight box */
-.gh-callout > *:last-child,
-.gh-callout p:last-child {
-  margin-bottom: 0 !important;
-}
-
-/* Ensure paragraphs and lists inside callouts have normal spacing */
-.gh-callout p,
-.gh-callout ul,
-.gh-callout ol {
-  margin-top: 0.2em;
-  margin-bottom: 0.6em;
-}
-
-.gh-callout ul,
-.gh-callout ol {
-  padding-left: 1.4em;
-}
-
-.gh-callout code {
-  background: #1a1f23;
-  color: #d2b863;
-  padding: 0.1em 0.4em;
-  border-radius: 4px;
-  font-size: 0.95em;
-}
-
-/* Responsive: don't overflow on small screens */
-.gh-callout {
-  word-break: break-word;
-  overflow-wrap: anywhere;
-}
